@@ -11,6 +11,10 @@ from urllib.request import urlopen, Request
 from os.path import basename
 import re
 import shutil
+from skimage.metrics import structural_similarity as ssim
+import matplotlib.pyplot as plt
+import numpy as np
+import cv2
 
 
 
@@ -61,10 +65,16 @@ def check_number_variants(collectionName):  # Iterate using the following conven
                 row = [current_time, modified_url, created_by, image_url]
                 csv_writer.writerow(row)
 
+            try:
+                urllib.request.urlretrieve(image_url, "local-filename.jpg")
+            except:
+                None
 
     print('---------------------')
     print('All Collections Found')
     print('---------------------')
+
+
 
 
 print('ScamSea Running...')
