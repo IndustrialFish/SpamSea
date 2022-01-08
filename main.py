@@ -19,7 +19,7 @@ def check_website_status(url):
 
 def check_number_variants(collectionName):
 
-    with open('Fraudulent Collections.csv', 'a', newline='') as write_obj:
+    with open('Suspect Collections.csv', 'a', newline='') as write_obj:
         csv_writer = writer(write_obj)
         now = datetime.now()
         current_time = now.strftime("%H:%M:%S")
@@ -33,7 +33,7 @@ def check_number_variants(collectionName):
 
         if status_code == 200:
 
-            with open('Fraudulent Collections.csv', 'a', newline='') as write_obj:
+            with open('Suspect Collections.csv', 'a', newline='') as write_obj:
                 csv_writer = writer(write_obj)
                 now = datetime.now()
                 current_time = now.strftime("%H:%M:%S")
@@ -52,3 +52,11 @@ print('------------------')
 print('Checking for collections...')
 
 check_number_variants("cryptopunk")
+
+# PLAN
+#-----------------------------#
+# Find images on page
+# Download images
+# Download all Collection images
+# Check Current against original
+# Create Report Ticket with info and csv
