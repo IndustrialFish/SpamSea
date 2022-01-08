@@ -18,6 +18,7 @@ import cv2
 
 
 
+
 def check_website_status(url):  # This function will return the status code of a website.
     headers = {
         'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/14.1 Safari/605.1.15',
@@ -66,9 +67,27 @@ def check_number_variants(collectionName):  # Iterate using the following conven
                 csv_writer.writerow(row)
 
             try:
-                urllib.request.urlretrieve(image_url, "local-filename.jpg")
+                urllib.request.urlretrieve(image_url, "images/duplicate.png")
             except:
                 None
+
+            for y in range(10000):
+                y = '{0:04}'.format(y)
+                original = cv2.imread("images/" + str(y) + ".png")
+                duplicate = cv2.imread("images/duplicate.png")
+
+                cv2.imshow("Original", original)
+                cv2.imshow("Duplicate", duplicate)
+
+                # 1) Check if 2 images are equals
+                if original.shape == duplicate.shape:
+                    print("The images have same size and channels")
+                difference = cv2.subtract(original, duplicate)
+                b, g, r = cv2.split(difference)
+                if cv2.countNonZero(b) == 0 and cv2.countNonZero(g) == 0 and cv2.countNonZero(r) == 0:
+                    print("The images are completely Equal")
+
+
 
     print('---------------------')
     print('All Collections Found')
