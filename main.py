@@ -49,7 +49,6 @@ def check_number_variants(collectionName):  # Iterate using the following conven
                 image_url = r.json()['assets'][0]['image_url']
             except:
                 image_url = "Failed to retrieve image"
-
             try:
                 created_by = r.json()['assets'][0]['creator']['user']['username']
             except:
