@@ -1,10 +1,17 @@
+import os
 import urllib
 import time
+import bs4
 import pandas as pd
 from bs4 import BeautifulSoup
-import requests
+import requests, json
 from csv import writer
 from datetime import datetime
+from urllib.request import urlopen, Request
+from os.path import basename
+import re
+import shutil
+
 
 
 def check_website_status(url):  # This function will return the status code of a website.
@@ -20,11 +27,11 @@ def check_website_status(url):  # This function will return the status code of a
 def check_number_variants(collectionName):  # Iterate using the following convention https://opensea.io/collection/{
     # collectionName}-{x}
 
-    with open('Suspect Collections.csv', 'a', newline='') as write_obj:
+    with open('Suspect Collections 2.csv', 'a', newline='') as write_obj:
         csv_writer = writer(write_obj)
         now = datetime.now()
         current_time = now.strftime("%H:%M:%S")
-        row = ['URL', 'Time']
+        row = ['Time', 'URL', 'Created By', 'Image URL']
         csv_writer.writerow(row)
 
     for x in range(10000):
@@ -33,14 +40,30 @@ def check_number_variants(collectionName):  # Iterate using the following conven
         status_code = check_website_status(modified_url)
 
         if status_code == 200:
-            with open('Suspect Collections.csv', 'a', newline='') as write_obj:
+
+            r = requests.get(
+                'https://api.opensea.io/api/v1/assets?order_direction=desc&offset=0&limit=20&collection=' + collectionName + '-' + str(
+                    x))
+
+            print(r.json())
+
+            try:
+                image_url = r.json()['assets'][0]['image_url']
+            except:
+                image_url = "Failed to retrieve image"
+
+            try:
+                created_by = r.json()['assets'][0]['creator']['user']['username']
+            except:
+                created_by = "Failed to retrieve creator"
+
+            with open('Suspect Collections 2.csv', 'a', newline='') as write_obj:
                 csv_writer = writer(write_obj)
                 now = datetime.now()
                 current_time = now.strftime("%H:%M:%S")
-                row = [modified_url, current_time]
+                row = [current_time, modified_url, created_by, image_url]
                 csv_writer.writerow(row)
 
-            print('200 :' + modified_url)
 
     print('---------------------')
     print('All Collections Found')
@@ -52,6 +75,8 @@ print('------------------')
 print('Checking for collections...')
 
 check_number_variants("cryptopunk")
+
+
 
 # PLAN
 # -----------------------------#
