@@ -45,8 +45,6 @@ def check_number_variants(collectionName):  # Iterate using the following conven
                 'https://api.opensea.io/api/v1/assets?order_direction=desc&offset=0&limit=20&collection=' + collectionName + '-' + str(
                     x))
 
-            print(r.json())
-
             try:
                 image_url = r.json()['assets'][0]['image_url']
             except:
