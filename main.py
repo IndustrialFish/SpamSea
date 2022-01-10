@@ -105,7 +105,6 @@ def check_number_variants(collectionName):  # Iterate using the following conven
                         c1 = c1 ** (1 / 2)
 
                         if c1 < 10000:
-                            print("Matches Punk" + str(y))
                             with open('Suspect Collections 2.csv', 'a', newline='') as write_obj:
                                 csv_writer = writer(write_obj)
                                 now = datetime.now()
