@@ -1,23 +1,17 @@
-import os
+# General Libraries
+
 import urllib
-import time
-import bs4
-import pandas as pd
-from bs4 import BeautifulSoup
 import requests, json
 from csv import writer
 from datetime import datetime
 from urllib.request import urlopen, Request
-from os.path import basename
-import re
-import shutil
-from skimage.metrics import structural_similarity as ssim
-import matplotlib.pyplot as plt
-import numpy as np
+
+# OpenCV Libraries
+
+from skimage.metrics import structural_similarity as compare_ssim
+import argparse
+import imutils
 import cv2
-
-
-
 
 def check_website_status(url):  # This function will return the status code of a website.
     headers = {
@@ -38,6 +32,8 @@ def check_number_variants(collectionName):  # Iterate using the following conven
         current_time = now.strftime("%H:%M:%S")
         row = ['Time', 'URL', 'Created By', 'Image URL']
         csv_writer.writerow(row)
+        print('Added field titles to CSV')
+        print(row)
 
     for x in range(10000):
 
@@ -57,44 +53,94 @@ def check_number_variants(collectionName):  # Iterate using the following conven
             try:
                 created_by = r.json()['assets'][0]['creator']['user']['username']
             except:
-                created_by = "Failed to retrieve creator"
+                created_by = "Empty Collection"
 
-            with open('Suspect Collections 2.csv', 'a', newline='') as write_obj:
-                csv_writer = writer(write_obj)
-                now = datetime.now()
-                current_time = now.strftime("%H:%M:%S")
-                row = [current_time, modified_url, created_by, image_url]
-                csv_writer.writerow(row)
-
-            try:
-                urllib.request.urlretrieve(image_url, "images/duplicate.png")
-            except:
-                None
+            if image_url == "Failed to retrieve image":
+                with open('empty_collection.csv', 'a', newline='') as write_obj:
+                    csv_writer = writer(write_obj)
+                    now = datetime.now()
+                    current_time = now.strftime("%H:%M:%S")
+                    row = [current_time, modified_url, created_by, image_url]
+                    csv_writer.writerow(row)
+                    print(row)
+            else:
+                with open('Suspect Collections 2.csv', 'a', newline='') as write_obj:
+                    csv_writer = writer(write_obj)
+                    now = datetime.now()
+                    current_time = now.strftime("%H:%M:%S")
+                    row = [current_time, modified_url, created_by, image_url]
+                    csv_writer.writerow(row)
+                    print(row)
 
             for y in range(10000):
+
                 y = '{0:04}'.format(y)
-                original = cv2.imread("images/" + str(y) + ".png")
-                duplicate = cv2.imread("images/duplicate.png")
 
-                cv2.imshow("Original", original)
-                cv2.imshow("Duplicate", duplicate)
+                try:
+                    urllib.request.urlretrieve(image_url, "images/duplicate.png")
+                    dim = (336, 336)
+                    duplicate = cv2.imread("images/duplicate.png")
+                    resized_duplicate = cv2.resize(duplicate, dim, interpolation=cv2.INTER_AREA)
+                    original = cv2.imread("images/cryptopunks/" + str(y) + ".png")
 
-                # 1) Check if 2 images are equals
-                if original.shape == duplicate.shape:
-                    print("The images have same size and channels")
-                difference = cv2.subtract(original, duplicate)
-                b, g, r = cv2.split(difference)
-                if cv2.countNonZero(b) == 0 and cv2.countNonZero(g) == 0 and cv2.countNonZero(r) == 0:
-                    print("The images are completely Equal")
+                    gray_image = cv2.cvtColor(duplicate, cv2.COLOR_BGR2GRAY)
+                    histogram = cv2.calcHist([gray_image], [0],
+                                             None, [256], [0, 256])
 
+                    gray_image1 = cv2.cvtColor(original, cv2.COLOR_BGR2GRAY)
+                    histogram1 = cv2.calcHist([gray_image1], [0],
+                                              None, [256], [0, 256])
 
+                    c1 = 0
+
+                    # Euclidean Distance between data1 and test
+                    i = 0
+                    while i < len(histogram) and i < len(histogram1):
+                        c1 += (histogram[i] - histogram1[i]) ** 2
+                        i += 1
+                    c1 = c1 ** (1 / 2)
+
+                    if c1 == 0:
+                        print("Matches Punk" + str(y))
+
+                except:
+                    None
+
+                # # 1) Check if 2 images are equals
+                # if original.shape == duplicate.shape:
+                #     print("The images have same size and channels")
+                # difference = cv2.subtract(original, duplicate)
+                # b, g, r = cv2.split(difference)
+                # if cv2.countNonZero(b) == 0 and cv2.countNonZero(g) == 0 and cv2.countNonZero(r) == 0:
+                #     print("The images are completely Equal")
+                # if original.shape != duplicate.shape:
+                #     print("Shape is different")
+                # if cv2.countNonZero(b) != 0 and cv2.countNonZero(g) != 0 and cv2.countNonZero(r) != 0:
+                #     print("Non Zero is not equal")
+
+            # for y in range(10000):
+            #     y = '{0:04}'.format(y)
+            #     original = cv2.imread("images/" + str(y) + ".png")
+            #     duplicate = cv2.imread("images/duplicate.png")
+            #
+            #     cv2.imshow("Original", original)
+            #     cv2.imshow("Duplicate", duplicate)
+            #
+            #     # 1) Check if 2 images are equals
+            #     if original.shape == duplicate.shape:
+            #         print("The images have same size and channels")
+            #     difference = cv2.subtract(original, duplicate)
+            #     b, g, r = cv2.split(difference)
+            #     if cv2.countNonZero(b) == 0 and cv2.countNonZero(g) == 0 and cv2.countNonZero(r) == 0:
+            #         print("The images are completely Equal")
+            #     if original.shape != duplicate.shape:
+            #         print("Shape is different")
+            #     if cv2.countNonZero(b) != 0 and cv2.countNonZero(g) != 0 and cv2.countNonZero(r) != 0:
+            #         print("Non Zero is not equal")
 
     print('---------------------')
     print('All Collections Found')
     print('---------------------')
-
-
-
 
 print('ScamSea Running...')
 print('------------------')
