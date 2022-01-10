@@ -30,10 +30,16 @@ def check_number_variants(collectionName):  # Iterate using the following conven
         csv_writer = writer(write_obj)
         now = datetime.now()
         current_time = now.strftime("%H:%M:%S")
-        row = ['Time', 'URL', 'Created By', 'Image URL']
+        row = ['Time', 'URL', 'Created By', 'Image URL', 'CopyMint Detected']
         csv_writer.writerow(row)
-        print('Added field titles to CSV')
-        print(row)
+
+
+    with open('Empty_collection.csv', 'a', newline='') as write_obj:
+        csv_writer = writer(write_obj)
+        now = datetime.now()
+        current_time = now.strftime("%H:%M:%S")
+        row = ['Time', 'URL', 'Created By', 'Image URL', 'CopyMint Detected']
+        csv_writer.writerow(row)
 
     for x in range(10000):
 
@@ -56,19 +62,11 @@ def check_number_variants(collectionName):  # Iterate using the following conven
                 created_by = "Empty Collection"
 
             if image_url == "Failed to retrieve image":
-                with open('empty_collection.csv', 'a', newline='') as write_obj:
+                with open('Empty_collection.csv', 'a', newline='') as write_obj:
                     csv_writer = writer(write_obj)
                     now = datetime.now()
                     current_time = now.strftime("%H:%M:%S")
-                    row = [current_time, modified_url, created_by, image_url]
-                    csv_writer.writerow(row)
-                    print(row)
-            else:
-                with open('Suspect Collections 2.csv', 'a', newline='') as write_obj:
-                    csv_writer = writer(write_obj)
-                    now = datetime.now()
-                    current_time = now.strftime("%H:%M:%S")
-                    row = [current_time, modified_url, created_by, image_url]
+                    row = [current_time, modified_url, created_by, image_url, "FALSE"]
                     csv_writer.writerow(row)
                     print(row)
 
@@ -102,6 +100,23 @@ def check_number_variants(collectionName):  # Iterate using the following conven
 
                     if c1 == 0:
                         print("Matches Punk" + str(y))
+                        with open('Suspect Collections 2.csv', 'a', newline='') as write_obj:
+                            csv_writer = writer(write_obj)
+                            now = datetime.now()
+                            current_time = now.strftime("%H:%M:%S")
+                            row = [current_time, modified_url, created_by, image_url, "CopyMint: Punk#" + str(y) ]
+                            csv_writer.writerow(row)
+                            print(row)
+                        break
+                    else:
+                        with open('Suspect Collections 2.csv', 'a', newline='') as write_obj:
+                            csv_writer = writer(write_obj)
+                            now = datetime.now()
+                            current_time = now.strftime("%H:%M:%S")
+                            row = [current_time, modified_url, created_by, image_url, "No Match" ]
+                            csv_writer.writerow(row)
+                            print(row)
+                            break
 
                 except:
                     None
@@ -147,8 +162,6 @@ print('------------------')
 print('Checking for collections...')
 
 check_number_variants("cryptopunk")
-
-
 
 # PLAN
 # -----------------------------#
