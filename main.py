@@ -56,7 +56,6 @@ def check_number_variants(collectionName):  # Iterate using the following conven
 
             try:
                 length = len(r.json()['assets'])
-                print(length)
             except:
                 None
             try:
@@ -143,8 +142,6 @@ print('ScamSea Running')
 print('---------------')
 print('Scanning Collections...')
 
-check_number_variants("cryptopunks")
-check_number_variants("cryptopunk")
 check_number_variants("punk")
 check_number_variants("punks")
 
