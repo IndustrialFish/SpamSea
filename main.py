@@ -13,6 +13,7 @@ import argparse
 import imutils
 import cv2
 
+
 def check_website_status(url):  # This function will return the status code of a website.
     headers = {
         'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/14.1 Safari/605.1.15',
@@ -26,19 +27,18 @@ def check_website_status(url):  # This function will return the status code of a
 def check_number_variants(collectionName):  # Iterate using the following convention https://opensea.io/collection/{
     # collectionName}-{x}
 
-    with open('Suspect Collections 2.csv', 'a', newline='') as write_obj:
+    with open('Suspect Collections.csv', 'a', newline='') as write_obj:
         csv_writer = writer(write_obj)
         now = datetime.now()
         current_time = now.strftime("%H:%M:%S")
-        row = ['Time', 'URL', 'Created By', 'Image URL', 'CopyMint Detected']
+        row = ['Time', 'collectionName', 'URL', 'Created By', 'Image URL', 'CopyMint Detected']
         csv_writer.writerow(row)
-
 
     with open('Empty_collection.csv', 'a', newline='') as write_obj:
         csv_writer = writer(write_obj)
         now = datetime.now()
         current_time = now.strftime("%H:%M:%S")
-        row = ['Time', 'URL', 'Created By', 'Image URL', 'CopyMint Detected']
+        row = ['Time', 'collectionName', 'URL', 'Created By', 'Image URL', 'CopyMint Detected']
         csv_writer.writerow(row)
 
     for x in range(10000):
@@ -55,6 +55,11 @@ def check_number_variants(collectionName):  # Iterate using the following conven
             print("Scanning: " + collectionName + "-" + str(x))
 
             try:
+                length = len(r.json()['assets'])
+                print(length)
+            except:
+                None
+            try:
                 image_url = r.json()['assets'][0]['image_url']
             except:
                 image_url = "Failed to retrieve image"
@@ -68,7 +73,7 @@ def check_number_variants(collectionName):  # Iterate using the following conven
                     csv_writer = writer(write_obj)
                     now = datetime.now()
                     current_time = now.strftime("%H:%M:%S")
-                    row = [current_time, modified_url, created_by, image_url, "FALSE"]
+                    row = [current_time, collectionName, modified_url, created_by, image_url, "FALSE"]
                     csv_writer.writerow(row)
             else:
 
@@ -105,37 +110,44 @@ def check_number_variants(collectionName):  # Iterate using the following conven
                         c1 = c1 ** (1 / 2)
 
                         if c1 < 10000:
-                            with open('Suspect Collections 2.csv', 'a', newline='') as write_obj:
+                            with open('Suspect Collections.csv', 'a', newline='') as write_obj:
                                 csv_writer = writer(write_obj)
                                 now = datetime.now()
                                 current_time = now.strftime("%H:%M:%S")
-                                row = [current_time, modified_url, created_by, image_url, "CopyMint: Punk#" + str(y) ]
+                                row = [current_time, collectionName, modified_url, created_by, image_url,
+                                       "CopyMint: Punk#" + str(y)]
                                 csv_writer.writerow(row)
                                 print(row)
                             break
 
                         if y == 10000 & c1 > 10000:
-
-                            with open('Suspect Collections 2.csv', 'a', newline='') as write_obj:
+                            with open('Suspect Collections.csv', 'a', newline='') as write_obj:
                                 csv_writer = writer(write_obj)
                                 now = datetime.now()
                                 current_time = now.strftime("%H:%M:%S")
-                                row = [current_time, modified_url, created_by, image_url, "No Match" ]
+                                row = [current_time, collectionName, modified_url, created_by, image_url, "No Match"]
                                 csv_writer.writerow(row)
                                 print(row)
                             break
 
                     except:
-                         None
+                        None
 
     print('---------------------')
-    print('All Collections Found')
+    print(collectionName + " Scan Complete")
     print('---------------------')
+
 
 print('---------------')
 print('ScamSea Running')
 print('---------------')
 print('Scanning Collections...')
 
+check_number_variants("cryptopunks")
 check_number_variants("cryptopunk")
+check_number_variants("punk")
+check_number_variants("punks")
 
+print('------------------------')
+print("Collection Scan Complete")
+print('------------------------')
