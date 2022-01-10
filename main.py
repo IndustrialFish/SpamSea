@@ -52,6 +52,8 @@ def check_number_variants(collectionName):  # Iterate using the following conven
                 'https://api.opensea.io/api/v1/assets?order_direction=desc&offset=0&limit=20&collection=' + collectionName + '-' + str(
                     x))
 
+            print("Scanning: " + collectionName + "-" + str(x))
+
             try:
                 image_url = r.json()['assets'][0]['image_url']
             except:
@@ -68,7 +70,6 @@ def check_number_variants(collectionName):  # Iterate using the following conven
                     current_time = now.strftime("%H:%M:%S")
                     row = [current_time, modified_url, created_by, image_url, "FALSE"]
                     csv_writer.writerow(row)
-                    print(row)
 
             for y in range(10000):
 
@@ -98,7 +99,7 @@ def check_number_variants(collectionName):  # Iterate using the following conven
                         i += 1
                     c1 = c1 ** (1 / 2)
 
-                    if c1 == 0:
+                    if c1 < 10000:
                         print("Matches Punk" + str(y))
                         with open('Suspect Collections 2.csv', 'a', newline='') as write_obj:
                             csv_writer = writer(write_obj)
@@ -108,7 +109,9 @@ def check_number_variants(collectionName):  # Iterate using the following conven
                             csv_writer.writerow(row)
                             print(row)
                         break
-                    else:
+
+                    if y == 10000 & c1 > 10000:
+
                         with open('Suspect Collections 2.csv', 'a', newline='') as write_obj:
                             csv_writer = writer(write_obj)
                             now = datetime.now()
@@ -116,7 +119,7 @@ def check_number_variants(collectionName):  # Iterate using the following conven
                             row = [current_time, modified_url, created_by, image_url, "No Match" ]
                             csv_writer.writerow(row)
                             print(row)
-                            break
+                        break
 
                 except:
                     None
@@ -157,16 +160,10 @@ def check_number_variants(collectionName):  # Iterate using the following conven
     print('All Collections Found')
     print('---------------------')
 
-print('ScamSea Running...')
-print('------------------')
-print('Checking for collections...')
+print('---------------')
+print('ScamSea Running')
+print('---------------')
+print('Scanning Collections...')
 
 check_number_variants("cryptopunk")
 
-# PLAN
-# -----------------------------#
-# Find images on page
-# Download images
-# Download all Collection images
-# Check Current against original
-# Create Report Ticket with info and csv
