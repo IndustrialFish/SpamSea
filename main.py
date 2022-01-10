@@ -70,91 +70,64 @@ def check_number_variants(collectionName):  # Iterate using the following conven
                     current_time = now.strftime("%H:%M:%S")
                     row = [current_time, modified_url, created_by, image_url, "FALSE"]
                     csv_writer.writerow(row)
-
-            for y in range(10000):
-
-                y = '{0:04}'.format(y)
+            else:
 
                 try:
                     urllib.request.urlretrieve(image_url, "images/duplicate.png")
-                    dim = (336, 336)
-                    duplicate = cv2.imread("images/duplicate.png")
-                    resized_duplicate = cv2.resize(duplicate, dim, interpolation=cv2.INTER_AREA)
-                    original = cv2.imread("images/cryptopunks/" + str(y) + ".png")
-
-                    gray_image = cv2.cvtColor(duplicate, cv2.COLOR_BGR2GRAY)
-                    histogram = cv2.calcHist([gray_image], [0],
-                                             None, [256], [0, 256])
-
-                    gray_image1 = cv2.cvtColor(original, cv2.COLOR_BGR2GRAY)
-                    histogram1 = cv2.calcHist([gray_image1], [0],
-                                              None, [256], [0, 256])
-
-                    c1 = 0
-
-                    # Euclidean Distance between data1 and test
-                    i = 0
-                    while i < len(histogram) and i < len(histogram1):
-                        c1 += (histogram[i] - histogram1[i]) ** 2
-                        i += 1
-                    c1 = c1 ** (1 / 2)
-
-                    if c1 < 10000:
-                        print("Matches Punk" + str(y))
-                        with open('Suspect Collections 2.csv', 'a', newline='') as write_obj:
-                            csv_writer = writer(write_obj)
-                            now = datetime.now()
-                            current_time = now.strftime("%H:%M:%S")
-                            row = [current_time, modified_url, created_by, image_url, "CopyMint: Punk#" + str(y) ]
-                            csv_writer.writerow(row)
-                            print(row)
-                        break
-
-                    if y == 10000 & c1 > 10000:
-
-                        with open('Suspect Collections 2.csv', 'a', newline='') as write_obj:
-                            csv_writer = writer(write_obj)
-                            now = datetime.now()
-                            current_time = now.strftime("%H:%M:%S")
-                            row = [current_time, modified_url, created_by, image_url, "No Match" ]
-                            csv_writer.writerow(row)
-                            print(row)
-                        break
-
                 except:
                     None
 
-                # # 1) Check if 2 images are equals
-                # if original.shape == duplicate.shape:
-                #     print("The images have same size and channels")
-                # difference = cv2.subtract(original, duplicate)
-                # b, g, r = cv2.split(difference)
-                # if cv2.countNonZero(b) == 0 and cv2.countNonZero(g) == 0 and cv2.countNonZero(r) == 0:
-                #     print("The images are completely Equal")
-                # if original.shape != duplicate.shape:
-                #     print("Shape is different")
-                # if cv2.countNonZero(b) != 0 and cv2.countNonZero(g) != 0 and cv2.countNonZero(r) != 0:
-                #     print("Non Zero is not equal")
+                for y in range(10000):
 
-            # for y in range(10000):
-            #     y = '{0:04}'.format(y)
-            #     original = cv2.imread("images/" + str(y) + ".png")
-            #     duplicate = cv2.imread("images/duplicate.png")
-            #
-            #     cv2.imshow("Original", original)
-            #     cv2.imshow("Duplicate", duplicate)
-            #
-            #     # 1) Check if 2 images are equals
-            #     if original.shape == duplicate.shape:
-            #         print("The images have same size and channels")
-            #     difference = cv2.subtract(original, duplicate)
-            #     b, g, r = cv2.split(difference)
-            #     if cv2.countNonZero(b) == 0 and cv2.countNonZero(g) == 0 and cv2.countNonZero(r) == 0:
-            #         print("The images are completely Equal")
-            #     if original.shape != duplicate.shape:
-            #         print("Shape is different")
-            #     if cv2.countNonZero(b) != 0 and cv2.countNonZero(g) != 0 and cv2.countNonZero(r) != 0:
-            #         print("Non Zero is not equal")
+                    y = '{0:04}'.format(y)
+
+                    try:
+                        dim = (336, 336)
+                        duplicate = cv2.imread("images/duplicate.png")
+                        resized_duplicate = cv2.resize(duplicate, dim, interpolation=cv2.INTER_AREA)
+                        original = cv2.imread("images/cryptopunks/" + str(y) + ".png")
+
+                        gray_image = cv2.cvtColor(duplicate, cv2.COLOR_BGR2GRAY)
+                        histogram = cv2.calcHist([gray_image], [0],
+                                                 None, [256], [0, 256])
+
+                        gray_image1 = cv2.cvtColor(original, cv2.COLOR_BGR2GRAY)
+                        histogram1 = cv2.calcHist([gray_image1], [0],
+                                                  None, [256], [0, 256])
+
+                        c1 = 0
+
+                        # Euclidean Distance between data1 and test
+                        i = 0
+                        while i < len(histogram) and i < len(histogram1):
+                            c1 += (histogram[i] - histogram1[i]) ** 2
+                            i += 1
+                        c1 = c1 ** (1 / 2)
+
+                        if c1 < 10000:
+                            print("Matches Punk" + str(y))
+                            with open('Suspect Collections 2.csv', 'a', newline='') as write_obj:
+                                csv_writer = writer(write_obj)
+                                now = datetime.now()
+                                current_time = now.strftime("%H:%M:%S")
+                                row = [current_time, modified_url, created_by, image_url, "CopyMint: Punk#" + str(y) ]
+                                csv_writer.writerow(row)
+                                print(row)
+                            break
+
+                        if y == 10000 & c1 > 10000:
+
+                            with open('Suspect Collections 2.csv', 'a', newline='') as write_obj:
+                                csv_writer = writer(write_obj)
+                                now = datetime.now()
+                                current_time = now.strftime("%H:%M:%S")
+                                row = [current_time, modified_url, created_by, image_url, "No Match" ]
+                                csv_writer.writerow(row)
+                                print(row)
+                            break
+
+                    except:
+                         None
 
     print('---------------------')
     print('All Collections Found')
