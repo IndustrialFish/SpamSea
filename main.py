@@ -119,16 +119,6 @@ def check_number_variants(collectionName):  # Iterate using the following conven
                                 print(row)
                             break
 
-                        if y == 10000 & c1 > 10000:
-                            with open('Suspect Collections.csv', 'a', newline='') as write_obj:
-                                csv_writer = writer(write_obj)
-                                now = datetime.now()
-                                current_time = now.strftime("%H:%M:%S")
-                                row = [current_time, collectionName, modified_url, created_by, image_url, "No Match"]
-                                csv_writer.writerow(row)
-                                print(row)
-                            break
-
                     except:
                         None
 
