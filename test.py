@@ -49,8 +49,8 @@ def check_number_variants(collectionName, originalCollection):
 
             length = len(r.json()['assets'])
 
-            if length > 3:
-                length = 3
+            if length > 10:
+                length = 10
 
             if length != 0:
 
@@ -68,29 +68,32 @@ def check_number_variants(collectionName, originalCollection):
 
                         y = '{0:04}'.format(y)
 
-                        dim = (336, 336)
-                        duplicate = cv2.imread("images/duplicate.jpeg")
-                        resized_duplicate = cv2.resize(duplicate, dim, interpolation=cv2.INTER_AREA)
-                        original = cv2.imread("images/" + originalCollection + "/" + str(y) + ".png")
+                        try:
+                            dim = (336, 336)
+                            duplicate = cv2.imread("images/duplicate.jpeg")
+                            original = cv2.imread("images/" + originalCollection + "/" + str(y) + ".png")
 
-                        gray_image = cv2.cvtColor(duplicate, cv2.COLOR_BGR2GRAY)
-                        histogram = cv2.calcHist([gray_image], [0],
-                                                 None, [256], [0, 256])
+                            gray_image = cv2.cvtColor(duplicate, cv2.COLOR_BGR2GRAY)
+                            histogram = cv2.calcHist([gray_image], [0],
+                                                     None, [256], [0, 256])
 
-                        gray_image1 = cv2.cvtColor(original, cv2.COLOR_BGR2GRAY)
-                        histogram1 = cv2.calcHist([gray_image1], [0],
-                                                  None, [256], [0, 256])
-                        c1 = 0
+                            gray_image1 = cv2.cvtColor(original, cv2.COLOR_BGR2GRAY)
+                            histogram1 = cv2.calcHist([gray_image1], [0],
+                                                      None, [256], [0, 256])
+                            c1 = 0
 
-                        # Euclidean Distance between data1 and test
+                            # Euclidean Distance between data1 and test
 
-                        i = 0
-                        while i < len(histogram) and i < len(histogram1):
-                            c1 += (histogram[i] - histogram1[i]) ** 2
-                            i += 1
-                        c1 = c1 ** (1 / 2)
+                            i = 0
+                            while i < len(histogram) and i < len(histogram1):
+                                c1 += (histogram[i] - histogram1[i]) ** 2
+                                i += 1
+                            c1 = c1 ** (1 / 2)
 
-                        print(collectionName + "-" + str(x+1) + " | " + str(z+1) + "/" + str(length) + " - " + str(y) + "/9999 - " + str(c1))
+                        except:
+                            print("Error Processing Image")
+
+                        print(collectionName + "-" + str(x) + " | " + str(z+1) + "/" + str(length) + " - " + str(y) + "/9999 - " + str(c1))
 
                         if c1 < 10000:
                             with open('Suspect Collections.csv', 'a', newline='') as write_obj:
@@ -113,7 +116,7 @@ print('ScamSea Running')
 print('---------------')
 print('Scanning Collections...')
 
-collection_list =[['punk', 'cryptopunks'], ['cryptopunk', 'cryptopunks'], ['cryptopunks', 'cryptopunks']]
+collection_list =[['punk', 'cryptopunks'], ['cryptopunk', 'cryptopunks'], ['cryptopunks', 'cryptopunks'], ['punks', 'cryptopunks'], ['crypt0punks', 'cryptopunks'] ]
 
 for q in collection_list:
 
