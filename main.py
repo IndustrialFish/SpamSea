@@ -41,7 +41,7 @@ def check_number_variants(collectionName):  # Iterate using the following conven
         row = ['Time', 'collectionName', 'URL', 'Created By', 'Image URL', 'CopyMint Detected']
         csv_writer.writerow(row)
 
-    for x in range(10000):
+    for x in range(500,10000):
 
         modified_url = 'https://opensea.io/collection/' + collectionName + '-' + str(x)
         status_code = check_website_status(modified_url)
@@ -132,8 +132,7 @@ print('ScamSea Running')
 print('---------------')
 print('Scanning Collections...')
 
-check_number_variants("punk")
-check_number_variants("punks")
+check_number_variants("doodles-official")
 
 print('------------------------')
 print("Collection Scan Complete")

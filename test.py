@@ -116,7 +116,9 @@ print('ScamSea Running')
 print('---------------')
 print('Scanning Collections...')
 
-collection_list =[['punk', 'cryptopunks'], ['cryptopunk', 'cryptopunks'], ['cryptopunks', 'cryptopunks'], ['punks', 'cryptopunks'], ['crypt0punks', 'cryptopunks'] ]
+# collection_list =[['punk', 'cryptopunks'], ['cryptopunk', 'cryptopunks'], ['cryptopunks', 'cryptopunks'], ['punks', 'cryptopunks'], ['crypt0punks', 'cryptopunks'] ]
+collection_list =[['doodles-official', 'doodles-official'],]
+
 
 for q in collection_list:
 
